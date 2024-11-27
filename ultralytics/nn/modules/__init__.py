@@ -71,7 +71,7 @@ from .conv import (
     LightConv,
     RepConv,
     SpatialAttention,
-    GAM_Attention,
+    ShuffleAttention,
 )
 from .head import OBB, Classify, Detect, Pose, RTDETRDecoder, Segment, WorldDetect, v10Detect
 from .transformer import (
@@ -157,5 +157,5 @@ __all__ = (
     "C2fCIB",
     "Attention",
     "PSA",
-    "GAM_Attention",
+    "ShuffleAttention",
 )

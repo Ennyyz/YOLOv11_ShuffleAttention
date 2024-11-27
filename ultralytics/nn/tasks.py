@@ -61,7 +61,7 @@ from ultralytics.nn.modules import (
     Segment,
     WorldDetect,
     v10Detect,
-    GAM_Attention,
+    ShuffleAttention,
 )
 from ultralytics.utils import DEFAULT_CFG_DICT, DEFAULT_CFG_KEYS, LOGGER, colorstr, emojis, yaml_load
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
@@ -1000,7 +1000,6 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             PSA,
             SCDown,
             C2fCIB,
-            GAM_Attention,
         }:
             c1, c2 = ch[f], args[0]
             if c2 != nc:  # if c2 not equal to number of classes (i.e. for Classify() output)
@@ -1042,6 +1041,13 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             if m is HGBlock:
                 args.insert(4, n)  # number of repeats
                 n = 1
+
+        elif m is ShuffleAttention:
+            c1, c2 = ch[f], args[0]
+            if c2 != nc:
+                c2 = make_divisible(min(c2, max_channels) * width, 8)
+            args = [c1, *args[1:]]
+
         elif m is ResNetLayer:
             c2 = args[1] if args[3] else args[1] * 4
         elif m is nn.BatchNorm2d:
